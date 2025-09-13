@@ -1133,27 +1133,30 @@
     }
 
     // --- Balance Formatting ---
-    function formatBalance(amount) {
-      const currency = getUserSetting("currency", "USD");
-      const rate = exchangeRates[currency] || 1;
-      const converted = amount * rate;
-      const symbol = currencySymbols[currency] || currency;
-      return symbol + converted.toLocaleString(undefined, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      });
-    }
+function formatBalance(amount) {
+  const currency = getUserSetting("currency", "USD");
+  const rate = exchangeRates[currency] || 1;
+  let converted = amount * rate;
 
-    function formatUpgradeCost(amountUSD) {
-      const currency = getUserSetting("currency", "USD");
-      const rate = exchangeRates[currency] || 1;
-      const converted = amountUSD * rate;
-      const symbol = currencySymbols[currency] || currency;
-      return `${symbol}${converted.toLocaleString(undefined, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      })}`;
-    }
+  // ✅ Fix: treat very tiny numbers as 0
+  if (Math.abs(converted) < 0.005) {
+    converted = 0;
+  }
+
+  const symbol = currencySymbols[currency] || currency;
+  return symbol + converted.toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
+function formatUpgradeCost(amount) {
+  const currency = getUserSetting("currency", "USD");
+  const symbol = currencySymbols[currency] || currency;
+  return `${symbol}${amount.toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  })}`;
+}
 
     // --- Render UI ---
     function renderUI() {
@@ -1392,72 +1395,78 @@
     });
 
     document.getElementById("depositForm")?.addEventListener("submit", async e => {
-      e.preventDefault();
-      const btn = e.target.querySelector("button[type='submit']");
-      btn.disabled = true;
+  e.preventDefault();
+  const btn = e.target.querySelector("button[type='submit']");
+  btn.disabled = true;
 
-      const amountInput = document.getElementById("depositAmount");
-      const amount = parseFloat(amountInput.value);
-      const files = depositFile.files;
+  const amountInput = document.getElementById("depositAmount");
+  const amountInUserCurrency = parseFloat(amountInput.value);
 
-      if (!files || files.length === 0) {
-        showNotification("Please upload a slip.");
-        btn.disabled = false;
-        return;
-      }
-      if (isNaN(amount) || amount <= 0) {
-        showNotification("Invalid amount.");
-        btn.disabled = false;
-        return;
-      }
-      const file = files[0];
-      if (!file.type.startsWith("image/")) {
-        showNotification("Invalid file type. Please upload an image.");
-        btn.disabled = false;
-        return;
-      }
+  const userCurrency = getUserSetting("currency", "USD"); 
+  const rate = exchangeRates[userCurrency] || 1;
+  const amountInUSD = amountInUserCurrency / rate;   // ✅ always save in USD
 
-      const slipUrl = URL.createObjectURL(file);
-      const currency = getUserSetting("currency", "USD");
+  const files = depositFile.files;
 
-      const request = {
-        amount,
-        currency,
-        status: "pending",
-        date: new Date().toISOString(),
-        slipName: file.name,
-        slipType: file.type,
-        slipSize: file.size,
-        slipUrl,
-        type: "deposit"
-      };
-      
-      const pendingDeposits = getUserSetting("pendingDeposits", []);
-      pendingDeposits.push(request);
-      setUserSetting("pendingDeposits", pendingDeposits);
+  if (!files || files.length === 0) {
+    showNotification("Please upload a slip.");
+    btn.disabled = false;
+    return;
+  }
+  if (isNaN(amountInUserCurrency) || amountInUserCurrency <= 0) {
+    showNotification("Invalid amount.");
+    btn.disabled = false;
+    return;
+  }
 
-      const history = getUserSetting("history", []);
-      history.unshift({
-        action: `Deposit submitted ${amount.toFixed(2)} ${currency}`,
-        date: new Date().toISOString()
-      });
-      setUserSetting("history", history);
+  const file = files[0];
+  if (!file.type.startsWith("image/")) {
+    showNotification("Invalid file type. Please upload an image.");
+    btn.disabled = false;
+    return;
+  }
 
-      document.querySelectorAll(".file-chip.uploaded").forEach(chip => chip.remove());
-      if (!document.getElementById("uploadSlipLabel")) {
-        const label = document.createElement("label");
-        label.htmlFor = "depositFile";
-        label.className = "file-chip upload-trigger";
-        label.id = "uploadSlipLabel";
-        label.innerHTML = "<span>📁 Upload Slip</span>";
-        chipContainer.appendChild(label);
-      }
-      amountInput.value = "";
-      depositFile.value = "";
-      depositModal.style.display = "none";
-      showNotification("Deposit submitted. Awaiting confirmation.");
-      btn.disabled = false;
-    });
+  const slipUrl = URL.createObjectURL(file);
+
+  const request = {
+    amount: amountInUSD,               // ✅ stored in base USD
+    originalAmount: amountInUserCurrency, // ✅ keep what user typed
+    currency: userCurrency,
+    status: "pending",
+    date: new Date().toISOString(),
+    slipName: file.name,
+    slipType: file.type,
+    slipSize: file.size,
+    slipUrl,
+    type: "deposit"
+  };
+  
+  const pendingDeposits = getUserSetting("pendingDeposits", []);
+  pendingDeposits.push(request);
+  setUserSetting("pendingDeposits", pendingDeposits);
+
+  const history = getUserSetting("history", []);
+  history.unshift({
+    action: `Deposit submitted ${amountInUserCurrency.toFixed(2)} ${userCurrency}`,
+    date: new Date().toISOString()
+  });
+  setUserSetting("history", history);
+
+  document.querySelectorAll(".file-chip.uploaded").forEach(chip => chip.remove());
+  if (!document.getElementById("uploadSlipLabel")) {
+    const label = document.createElement("label");
+    label.htmlFor = "depositFile";
+    label.className = "file-chip upload-trigger";
+    label.id = "uploadSlipLabel";
+    label.innerHTML = "<span>📁 Upload Slip</span>";
+    chipContainer.appendChild(label);
+  }
+  amountInput.value = "";
+  depositFile.value = "";
+  depositModal.style.display = "none";
+  showNotification("Deposit submitted. Awaiting confirmation.");
+  btn.disabled = false;
+});
 
     // --- Manage Payment Methods ---
     const addPaymentAction = document.querySelector(".actions .action:nth-child(3)");
