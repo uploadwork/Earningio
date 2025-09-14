@@ -116,229 +116,225 @@
   </style>
 </head>
 <body>
-  <!-- API Key Banner (for internal use) -->
-  <div class="api-key-banner">⚠️ Real-Time Exchange Rate API Key: 7a0272e9aa0261ae6b9a862d</div>
-
-  <h2>Admin Panel</h2>
-  <input type="text" id="searchBar" placeholder="Search users...">
-  <div class="user-list" id="userList">
-    <div class="loading">Loading users...</div>
+  <div id="passwordModal" class="modal" style="display: flex;">
+    <div class="modal-content" style="text-align: center;">
+      <h3>Enter Admin Password</h3>
+      <input type="password" id="passwordInput" placeholder="Password" style="width: 80%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px;">
+      <button id="submitPassword" class="approve">Login</button>
+    </div>
   </div>
 
-  <!-- Debug info panel -->
-  <div id="debugInfo" class="debug-info"></div>
+  <div id="mainContent" style="display: none;">
+    <div class="api-key-banner">⚠️ Real-Time Exchange Rate API Key: 7a0272e9aa0261ae6b9a862d</div>
 
-  <!-- Live Rate Display -->
-  <div class="rate-display" id="liveRateDisplay">
-    Live Exchange Rate: Loading...
-  </div>
+    <h2>Admin Panel</h2>
+    <input type="text" id="searchBar" placeholder="Search users...">
+    <div class="user-list" id="userList">
+      <div class="loading">Loading users...</div>
+    </div>
 
-  <!-- Manage Modal -->
-  <div class="modal" id="userModal">
-    <div class="modal-content">
-      <span class="close" id="closeModal">&times;</span>
-      <h3 id="modalUsername"></h3>
-      <p><strong>Balance:</strong> <span id="modalBalance">0</span> USD</p>
+    <div id="debugInfo" class="debug-info"></div>
 
-      <div class="section">
-        <h4>Adjust Balance</h4>
-        <input type="number" id="adjustAmount" placeholder="Enter amount" step="0.01">
-        
-        <!-- Currency Selector -->
-        <select id="adjustCurrency" style="width:100%;padding:8px;margin:8px 0;border:1px solid #ccc;border-radius:6px;font-size:16px;">
-          <option value="USD" selected>USD ($)</option>
-          <option value="EUR">EUR (€)</option>
-          <option value="GBP">GBP (£)</option>
-          <option value="JPY">JPY (¥)</option>
-          <option value="INR">INR (₹)</option>
-          <option value="CNY">CNY (¥)</option>
-          <option value="AUD">AUD (A$)</option>
-          <option value="CAD">CAD (C$)</option>
-          <option value="ZAR">ZAR (R)</option>
-          <option value="AED">AED (د.إ)</option>
-          <option value="AFN">AFN (؋)</option>
-          <option value="ALL">ALL (L)</option>
-          <option value="AMD">AMD (֏)</option>
-          <option value="ANG">ANG (ƒ)</option>
-          <option value="AOA">AOA (Kz)</option>
-          <option value="ARS">ARS ($)</option>
-          <option value="AWG">AWG (ƒ)</option>
-          <option value="AZN">AZN (₼)</option>
-          <option value="BAM">BAM (KM)</option>
-          <option value="BBD">BBD ($)</option>
-          <option value="BDT">BDT (৳)</option>
-          <option value="BGN">BGN (лв)</option>
-          <option value="BHD">BHD (ب.د)</option>
-          <option value="BIF">BIF (FBu)</option>
-          <option value="BMD">BMD ($)</option>
-          <option value="BND">BND ($)</option>
-          <option value="BOB">BOB (Bs.)</option>
-          <option value="BRL">BRL (R$)</option>
-          <option value="BSD">BSD ($)</option>
-          <option value="BWP">BWP (P)</option>
-          <option value="BYN">BYN (Br)</option>
-          <option value="BZD">BZD ($)</option>
-          <option value="CHF">CHF (CHF)</option>
-          <option value="CLP">CLP ($)</option>
-          <option value="COP">COP ($)</option>
-          <option value="CRC">CRC (₡)</option>
-          <option value="CUP">CUP (₱)</option>
-          <option value="CZK">CZK (Kč)</option>
-          <option value="DKK">DKK (kr)</option>
-          <option value="DOP">DOP (RD$)</option>
-          <option value="DZD">DZD (دج)</option>
-          <option value="EGP">EGP (E£)</option>
-          <option value="ETB">ETB (Br)</option>
-          <option value="EUR">EUR (€)</option>
-          <option value="FJD">FJD ($)</option>
-          <option value="GBP">GBP (£)</option>
-          <option value="GEL">GEL (₾)</option>
-          <option value="GHS">GHS (₵)</option>
-          <option value="GIP">GIP (£)</option>
-          <option value="GNF">GNF (FG)</option>
-          <option value="GTQ">GTQ (Q)</option>
-          <option value="HKD">HKD (HK$)</option>
-          <option value="HNL">HNL (L)</option>
-          <option value="HRK">HRK (kn)</option>
-          <option value="HUF">HUF (Ft)</option>
-          <option value="IDR">IDR (Rp)</option>
-          <option value="ILS">ILS (₪)</option>
-          <option value="INR">INR (₹)</option>
-          <option value="IQD">IQD (ع.د)</option>
-          <option value="IRR">IRR (﷼)</option>
-          <option value="ISK">ISK (kr)</option>
-          <option value="JMD">JMD (J$)</option>
-          <option value="JPY">JPY (¥)</option>
-          <option value="KES">KES (KSh)</option>
-          <option value="KGS">KGS (с)</option>
-          <option value="KHR">KHR (៛)</option>
-          <option value="KRW">KRW (₩)</option>
-          <option value="KWD">KWD (د.ك)</option>
-          <option value="KZT">KZT (₸)</option>
-          <option value="LAK">LAK (₭)</option>
-          <option value="LBP">LBP (ل.ل)</option>
-          <option value="LKR">LKR (Rs)</option>
-          <option value="LYD">LYD (ل.د)</option>
-          <option value="MAD">MAD (د.م.)</option>
-          <option value="MDL">MDL (L)</option>
-          <option value="MKD">MKD (ден)</option>
-          <option value="MMK">MMK (K)</option>
-          <option value="MNT">MNT (₮)</option>
-          <option value="MOP">MOP (MOP$)</option>
-          <option value="MRU">MRU (UM)</option>
-          <option value="MUR">MUR (₨)</option>
-          <option value="MXN">MXN ($)</option>
-          <option value="MYR">MYR (RM)</option>
-          <option value="MZN">MZN (MT)</option>
-          <option value="NAD">NAD (N$)</option>
-          <option value="NGN">NGN (₦)</option>
-          <option value="NOK">NOK (kr)</option>
-          <option value="NPR">NPR (₨)</option>
-          <option value="NZD">NZD (NZ$)</option>
-          <option value="OMR">OMR (ر.ع.)</option>
-          <option value="PAB">PAB (B/.)</option>
-          <option value="PEN">PEN (S/)</option>
-          <option value="PGK">PGK (K)</option>
-          <option value="PHP">PHP (₱)</option>
-          <option value="PKR">PKR (₨)</option>
-          <option value="PLN">PLN (zł)</option>
-          <option value="PYG">PYG (₲)</option>
-          <option value="QAR">QAR (ر.ق)</option>
-          <option value="RON">RON (lei)</option>
-          <option value="RSD">RSD (дин)</option>
-          <option value="RUB">RUB (₽)</option>
-          <option value="RWF">RWF (FRw)</option>
-          <option value="SAR">SAR (ر.س)</option>
-          <option value="SEK">SEK (kr)</option>
-          <option value="SGD">SGD (S$)</option>
-          <option value="SYP">SYP (£S)</option>
-          <option value="THB">THB (฿)</option>
-          <option value="TND">TND (د.ت)</option>
-          <option value="TRY">TRY (₺)</option>
-          <option value="UAH">UAH (₴)</option>
-          <option value="USD">USD ($)</option>
-          <option value="UYU">UYU ($U)</option>
-          <option value="UZS">UZS (сўм)</option>
-          <option value="VND">VND (₫)</option>
-          <option value="XAF">XAF (FCFA)</option>
-          <option value="XOF">XOF (CFA)</option>
-          <option value="ZAR">ZAR (R)</option>
-          <option value="ZMW">ZMW (ZK)</option>
-        </select>
+    <div class="rate-display" id="liveRateDisplay">
+      Live Exchange Rate: Loading...
+    </div>
 
-        <div style="display:flex;gap:10px;">
-          <button id="addFundsBtn" class="approve" style="flex:1;">Add Funds</button>
-          <button id="removeFundsBtn" class="reject" style="flex:1;">Remove Funds</button>
+    <div class="modal" id="userModal">
+      <div class="modal-content">
+        <span class="close" id="closeModal">&times;</span>
+        <h3 id="modalUsername"></h3>
+        <p><strong>Balance:</strong> <span id="modalBalance">0</span> USD</p>
+
+        <div class="section">
+          <h4>Adjust Balance</h4>
+          <input type="number" id="adjustAmount" placeholder="Enter amount" step="0.01">
+          
+          <select id="adjustCurrency" style="width:100%;padding:8px;margin:8px 0;border:1px solid #ccc;border-radius:6px;font-size:16px;">
+            <option value="USD" selected>USD ($)</option>
+            <option value="EUR">EUR (€)</option>
+            <option value="GBP">GBP (£)</option>
+            <option value="JPY">JPY (¥)</option>
+            <option value="INR">INR (₹)</option>
+            <option value="CNY">CNY (¥)</option>
+            <option value="AUD">AUD (A$)</option>
+            <option value="CAD">CAD (C$)</option>
+            <option value="ZAR">ZAR (R)</option>
+            <option value="AED">AED (د.إ)</option>
+            <option value="AFN">AFN (؋)</option>
+            <option value="ALL">ALL (L)</option>
+            <option value="AMD">AMD (֏)</option>
+            <option value="ANG">ANG (ƒ)</option>
+            <option value="AOA">AOA (Kz)</option>
+            <option value="ARS">ARS ($)</option>
+            <option value="AWG">AWG (ƒ)</option>
+            <option value="AZN">AZN (₼)</option>
+            <option value="BAM">BAM (KM)</option>
+            <option value="BBD">BBD ($)</option>
+            <option value="BDT">BDT (৳)</option>
+            <option value="BGN">BGN (лв)</option>
+            <option value="BHD">BHD (ب.د)</option>
+            <option value="BIF">BIF (FBu)</option>
+            <option value="BMD">BMD ($)</option>
+            <option value="BND">BND ($)</option>
+            <option value="BOB">BOB (Bs.)</option>
+            <option value="BRL">BRL (R$)</option>
+            <option value="BSD">BSD ($)</option>
+            <option value="BWP">BWP (P)</option>
+            <option value="BYN">BYN (Br)</option>
+            <option value="BZD">BZD ($)</option>
+            <option value="CHF">CHF (CHF)</option>
+            <option value="CLP">CLP ($)</option>
+            <option value="COP">COP ($)</option>
+            <option value="CRC">CRC (₡)</option>
+            <option value="CUP">CUP (₱)</option>
+            <option value="CZK">CZK (Kč)</option>
+            <option value="DKK">DKK (kr)</option>
+            <option value="DOP">DOP (RD$)</option>
+            <option value="DZD">DZD (دج)</option>
+            <option value="EGP">EGP (E£)</option>
+            <option value="ETB">ETB (Br)</option>
+            <option value="FJD">FJD ($)</option>
+            <option value="GEL">GEL (₾)</option>
+            <option value="GHS">GHS (₵)</option>
+            <option value="GIP">GIP (£)</option>
+            <option value="GNF">GNF (FG)</option>
+            <option value="GTQ">GTQ (Q)</option>
+            <option value="HKD">HKD (HK$)</option>
+            <option value="HNL">HNL (L)</option>
+            <option value="HRK">HRK (kn)</option>
+            <option value="HUF">HUF (Ft)</option>
+            <option value="IDR">IDR (Rp)</option>
+            <option value="ILS">ILS (₪)</option>
+            <option value="IQD">IQD (ع.د)</option>
+            <option value="IRR">IRR (﷼)</option>
+            <option value="ISK">ISK (kr)</option>
+            <option value="JMD">JMD (J$)</option>
+            <option value="KES">KES (KSh)</option>
+            <option value="KGS">KGS (с)</option>
+            <option value="KHR">KHR (៛)</option>
+            <option value="KRW">KRW (₩)</option>
+            <option value="KWD">KWD (د.ك)</option>
+            <option value="KZT">KZT (₸)</option>
+            <option value="LAK">LAK (₭)</option>
+            <option value="LBP">LBP (ل.ل)</option>
+            <option value="LKR">LKR (Rs)</option>
+            <option value="LYD">LYD (ل.د)</option>
+            <option value="MAD">MAD (د.م.)</option>
+            <option value="MDL">MDL (L)</option>
+            <option value="MKD">MKD (ден)</option>
+            <option value="MMK">MMK (K)</option>
+            <option value="MNT">MNT (₮)</option>
+            <option value="MOP">MOP (MOP$)</option>
+            <option value="MRU">MRU (UM)</option>
+            <option value="MUR">MUR (₨)</option>
+            <option value="MXN">MXN ($)</option>
+            <option value="MYR">MYR (RM)</option>
+            <option value="MZN">MZN (MT)</option>
+            <option value="NAD">NAD (N$)</option>
+            <option value="NGN">NGN (₦)</option>
+            <option value="NOK">NOK (kr)</option>
+            <option value="NPR">NPR (₨)</option>
+            <option value="NZD">NZD (NZ$)</option>
+            <option value="OMR">OMR (ر.ع.)</option>
+            <option value="PAB">PAB (B/.)</option>
+            <option value="PEN">PEN (S/)</option>
+            <option value="PGK">PGK (K)</option>
+            <option value="PHP">PHP (₱)</option>
+            <option value="PKR">PKR (₨)</option>
+            <option value="PLN">PLN (zł)</option>
+            <option value="PYG">PYG (₲)</option>
+            <option value="QAR">QAR (ر.ق)</option>
+            <option value="RON">RON (lei)</option>
+            <option value="RSD">RSD (дин)</option>
+            <option value="RUB">RUB (₽)</option>
+            <option value="RWF">RWF (FRw)</option>
+            <option value="SAR">SAR (ر.س)</option>
+            <option value="SEK">SEK (kr)</option>
+            <option value="SGD">SGD (S$)</option>
+            <option value="SYP">SYP (£S)</option>
+            <option value="THB">THB (฿)</option>
+            <option value="TND">TND (د.ت)</option>
+            <option value="TRY">TRY (₺)</option>
+            <option value="UAH">UAH (₴)</option>
+            <option value="UYU">UYU ($U)</option>
+            <option value="UZS">UZS (сўм)</option>
+            <option value="VND">VND (₫)</option>
+            <option value="XAF">XAF (FCFA)</option>
+            <option value="XOF">XOF (CFA)</option>
+            <option value="ZMW">ZMW (ZK)</option>
+          </select>
+
+          <div style="display:flex;gap:10px;">
+            <button id="addFundsBtn" class="approve" style="flex:1;">Add Funds</button>
+            <button id="removeFundsBtn" class="reject" style="flex:1;">Remove Funds</button>
+          </div>
+        </div>
+
+        <div class="section">
+          <h4>Pending Deposits</h4>
+          <div id="depositList"></div>
+        </div>
+
+        <div class="section">
+          <h4>Pending Withdrawals</h4>
+          <div id="withdrawList"></div>
+        </div>
+
+        <div class="section">
+          <h4>Payment Methods</h4>
+          <div id="paymentChips" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+            <button class="chip" data-method="Bank">Bank</button>
+            <button class="chip" data-method="Gcash">Gcash</button>
+            <button class="chip" data-method="PayPal">PayPal</button>
+            <button class="chip" data-method="Cashapp">Cashapp</button>
+            <button class="chip" data-method="Wallet">Wallet</button>
+          </div>
+          <div id="paymentForm"></div>
+        </div>
+
+        <div class="section">
+          <h4>History</h4>
+          <div id="historyLog"></div>
+        </div>
+
+        <div class="section">
+          <h4>Generate PIN</h4>
+          <button id="generatePinBtn">Generate</button>
+          <p><strong>Current PIN:</strong> <span id="currentPin">None</span></p>
+        </div>
+
+        <div class="section">
+          <h4>PIN Control</h4>
+          <button id="sendPinBtn" class="approve">Send New PIN</button>
+          <button id="sendInstrBtn" class="reject">Enter Instructions</button>
+        </div>
+
+        <div class="section" id="upgradeSection">
+          <h4>Upgrade Account</h4>
+          <button class="approve" id="upgradeTier2Btn">Upgrade to Tier 2</button>
+          <button class="approve" id="upgradeTier3Btn">Upgrade to Tier 3</button>
+          <p id="upgradeStatus" style="margin-top:8px;color:green;font-weight:bold;"></p>
         </div>
       </div>
+    </div>
 
-      <div class="section">
-        <h4>Pending Deposits</h4>
-        <div id="depositList"></div>
+    <div class="modal" id="pinRequestModal">
+      <div class="modal-content">
+        <span class="close" id="closePinRequest">&times;</span>
+        <h3>PIN Requests</h3>
+        <div id="pendingRequests"></div>
+        <div id="completedRequests" style="margin-top:15px;"></div>
       </div>
+    </div>
 
-      <div class="section">
-        <h4>Pending Withdrawals</h4>
-        <div id="withdrawList"></div>
-      </div>
-
-      <div class="section">
-        <h4>Payment Methods</h4>
-        <div id="paymentChips" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
-          <button class="chip" data-method="Bank">Bank</button>
-          <button class="chip" data-method="Gcash">Gcash</button>
-          <button class="chip" data-method="PayPal">PayPal</button>
-          <button class="chip" data-method="Cashapp">Cashapp</button>
-          <button class="chip" data-method="Wallet">Wallet</button>
-        </div>
-        <div id="paymentForm"></div>
-      </div>
-
-      <div class="section">
-        <h4>History</h4>
-        <div id="historyLog"></div>
-      </div>
-
-      <div class="section">
-        <h4>Generate PIN</h4>
-        <button id="generatePinBtn">Generate</button>
-        <p><strong>Current PIN:</strong> <span id="currentPin">None</span></p>
-      </div>
-
-      <div class="section">
-        <h4>PIN Control</h4>
-        <button id="sendPinBtn" class="approve">Send New PIN</button>
-        <button id="sendInstrBtn" class="reject">Enter Instructions</button>
-      </div>
-
-      <div class="section" id="upgradeSection">
-        <h4>Upgrade Account</h4>
-        <button class="approve" id="upgradeTier2Btn">Upgrade to Tier 2</button>
-        <button class="approve" id="upgradeTier3Btn">Upgrade to Tier 3</button>
-        <p id="upgradeStatus" style="margin-top:8px;color:green;font-weight:bold;"></p>
+    <div class="modal" id="slipModal">
+      <div class="modal-content" style="max-width:95%;max-height:90vh;overflow:hidden;">
+        <span class="close" id="closeSlip">&times;</span>
+        <img id="slipImage" src="" alt="Slip Preview" style="max-width:100%;max-height:85vh;border-radius:6px;">
       </div>
     </div>
   </div>
 
-  <!-- PIN Requests Modal -->
-  <div class="modal" id="pinRequestModal">
-    <div class="modal-content">
-      <span class="close" id="closePinRequest">&times;</span>
-      <h3>PIN Requests</h3>
-      <div id="pendingRequests"></div>
-      <div id="completedRequests" style="margin-top:15px;"></div>
-    </div>
-  </div>
-
-  <!-- Slip Viewer Modal -->
-  <div class="modal" id="slipModal">
-    <div class="modal-content" style="max-width:95%;max-height:90vh;overflow:hidden;">
-      <span class="close" id="closeSlip">&times;</span>
-      <img id="slipImage" src="" alt="Slip Preview" style="max-width:100%;max-height:85vh;border-radius:6px;">
-    </div>
-  </div>
-
-  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
@@ -423,7 +419,7 @@
       PAB: 1.0, PEN: 3.85, PGK: 3.65, PHP: 55.0, PKR: 298.0, PLN: 4.3,
       PYG: 7460, QAR: 3.64, RON: 4.6, RSD: 109.0, RUB: 92.0, RWF: 1250,
       SAR: 3.75, SEK: 10.6, SGD: 1.36, SYP: 2510, THB: 35.0, TND: 3.0,
-      TRY: 32.0, UAH: 36.8, USD: 1.0, UYU: 42.0, UZS: 11220, VND: 23950,
+      TRY: 32.0, UAH: 36.8, UYU: 42.0, UZS: 11220, VND: 23950,
       XAF: 610.0, XOF: 610.0, ZAR: 18.0, ZMW: 22.0
     };
 
@@ -431,6 +427,34 @@
 
     // --- DOM Elements ---
     document.addEventListener("DOMContentLoaded", function () {
+      
+      // --- Password Protection ---
+      const passwordModal = document.getElementById('passwordModal');
+      const mainContent = document.getElementById('mainContent');
+      const passwordInput = document.getElementById('passwordInput');
+      const submitPasswordBtn = document.getElementById('submitPassword');
+      const correctPassword = 'divine45$';
+
+      function checkPassword() {
+        if (passwordInput.value === correctPassword) {
+          passwordModal.style.display = 'none';
+          mainContent.style.display = 'block';
+          initApp(); // Initialize the app only after successful login
+        } else {
+          alert('Incorrect password!');
+          passwordInput.value = '';
+        }
+      }
+      
+      submitPasswordBtn.addEventListener('click', checkPassword);
+      passwordInput.addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') {
+          checkPassword();
+        }
+      });
+      // --- End Password Protection ---
+
+
       const usersContainer = document.getElementById("userList");
       const searchInput = document.getElementById("searchBar");
       const debugInfo = document.getElementById("debugInfo");
@@ -673,11 +697,11 @@
 
       // --- Payment templates ---
       const paymentTemplates = {
-        "Bank": `<input type="text" name="bankName" placeholder="Bank Name"><input type="text" name="accountNumber" placeholder="Account Number"><input type="text" name="accountHolder" placeholder="Account Holder">`,
-        "PayPal": `<input type="email" name="paypalEmail" placeholder="PayPal Email">`,
-        "Cashapp": `<input type="text" name="cashappTag" placeholder="Cashapp Tag">`,
-        "Gcash": `<input type="text" name="gcashName" placeholder="Gcash Name"><input type="text" name="gcashNumber" placeholder="Gcash Number">`,
-        "Wallet": `<input type="text" name="walletAddress" placeholder="Wallet Address">`
+        "Bank": `<div class="payment-field"><input type="text" name="bankName" placeholder="Bank Name"></div><div class="payment-field"><input type="text" name="accountNumber" placeholder="Account Number"></div><div class="payment-field"><input type="text" name="accountHolder" placeholder="Account Holder"></div>`,
+        "PayPal": `<div class="payment-field"><input type="email" name="paypalEmail" placeholder="PayPal Email"></div>`,
+        "Cashapp": `<div class="payment-field"><input type="text" name="cashappTag" placeholder="Cashapp Tag"></div>`,
+        "Gcash": `<div class="payment-field"><input type="text" name="gcashName" placeholder="Gcash Name"></div><div class="payment-field"><input type="text" name="gcashNumber" placeholder="Gcash Number"></div>`,
+        "Wallet": `<div class="payment-field"><input type="text" name="walletAddress" placeholder="Wallet Address"></div>`
       };
 
       // --- Add funds to user account ---
@@ -685,8 +709,8 @@
         const amt = parseFloat(document.getElementById("adjustAmount").value);
         const currency = document.getElementById("adjustCurrency").value;
         
-        if (amt <= 0) {
-          alert("Amount must be greater than 0");
+        if (isNaN(amt) || amt <= 0) {
+          alert("Amount must be a positive number");
           return;
         }
 
@@ -727,8 +751,8 @@
         const amt = parseFloat(document.getElementById("adjustAmount").value);
         const currency = document.getElementById("adjustCurrency").value;
         
-        if (amt <= 0) {
-          alert("Amount must be greater than 0");
+        if (isNaN(amt) || amt <= 0) {
+          alert("Amount must be a positive number");
           return;
         }
 
@@ -837,6 +861,9 @@
         if (e.target.classList.contains("approve") || e.target.classList.contains("reject")) {
           const idx = e.target.dataset.idx;
           const type = e.target.dataset.type;
+          
+          if(!idx || !type) return; // Prevent error on other approve/reject buttons
+
           const action = e.target.classList.contains("approve") ? "approved" : "rejected";
           
           if (type === "deposit") {
@@ -864,7 +891,9 @@
             w.status = action;
             
             if (action === "approved") {
-              selectedUserData.balance = (selectedUserData.balance || 0) - w.amount;
+              // Balance is already deducted on withdrawal request, so only add it back if rejected.
+            } else {
+               selectedUserData.balance = (selectedUserData.balance || 0) + w.amount;
             }
             
             selectedUserData.history = selectedUserData.history || [];
@@ -919,10 +948,11 @@
 
       // --- Handle user list clicks ---
       usersContainer.addEventListener("click", e => {
-        if (e.target.classList.contains("manageBtn")) {
-          openManageModal(e.target.dataset.user);
+        const button = e.target.closest("button");
+        if (button && button.classList.contains("manageBtn")) {
+          openManageModal(button.dataset.user);
         }
-        if (e.target.classList.contains("pinReqBtn")) {
+        if (button && button.classList.contains("pinReqBtn")) {
           loadPinRequests();
           pinRequestModal.style.display = "flex";
         }
@@ -945,35 +975,37 @@
               if (req.type !== "pin") return;
               
               const div = document.createElement("div");
-              div.className = `pin-request ${req.status}`;
+              div.className = `entry pin-request ${req.status}`;
               div.innerHTML = `
-                <p><strong>User:</strong> ${username}</p>
-                <p><strong>Date:</strong> ${new Date(req.date).toLocaleString()}</p>
-                ${req.slipUrl ? `<img src="${req.slipUrl}" class="slipThumb" data-src="${req.slipUrl}">` : ""}
-                <p><strong>Status:</strong> ${req.status}</p>
+                <div>
+                  <strong>${username}</strong><br>
+                  <small>${new Date(req.date).toLocaleString()}</small>
+                  ${req.slipUrl ? `<img src="${req.slipUrl}" class="slipThumb" data-src="${req.slipUrl}">` : ""}
+                </div>
               `;
               
               if (req.status === "pending") {
+                const actionDiv = document.createElement('div');
+                
                 const sendBtn = document.createElement("button");
                 sendBtn.textContent = "Send PIN";
                 sendBtn.className = "approve";
+                sendBtn.style.marginBottom = '5px';
                 sendBtn.onclick = () => {
                   const pin = prompt("Enter PIN for " + username);
                   if (pin) {
+                    req.status = "completed"; // Mark as completed
                     db.collection("users").doc(userId).update({
                       pin: pin,
                       newPinNotification: { pin: pin, fromAdmin: true },
-                      "pendingDeposits": firebase.firestore.FieldValue.arrayRemove(req)
-                    }).then(() => {
-                      db.collection("users").doc(userId).update({
-                        history: firebase.firestore.FieldValue.arrayUnion({
-                          action: `PIN sent (${pin})`,
+                      pendingDeposits: deposits, // Update the entire array
+                      history: firebase.firestore.FieldValue.arrayUnion({
+                          action: `PIN sent by admin: ${pin}`,
                           date: new Date().toISOString()
                         })
-                      }).then(() => {
+                    }).then(() => {
                         loadPinRequests();
                         loadUsers();
-                      });
                     }).catch(error => {
                       console.error("Error updating PIN:", error);
                       alert("Error updating PIN");
@@ -981,10 +1013,10 @@
                     });
                   }
                 };
-                div.appendChild(sendBtn);
+                actionDiv.appendChild(sendBtn);
 
                 const instrBtn = document.createElement("button");
-                instrBtn.textContent = "Enter Instructions";
+                instrBtn.textContent = "Instructions";
                 instrBtn.className = "reject";
                 instrBtn.onclick = () => {
                   const instr = prompt("Enter instructions for " + username, userData.pinInstructions || "");
@@ -1000,37 +1032,10 @@
                     });
                   }
                 };
-                div.appendChild(instrBtn);
+                actionDiv.appendChild(instrBtn);
+                div.appendChild(actionDiv);
+                pendingRequests.appendChild(div);
               }
-              
-              if (req.status === "completed") {
-                const revokeBtn = document.createElement("button");
-                revokeBtn.textContent = "Revoke PIN";
-                revokeBtn.className = "reject";
-                revokeBtn.onclick = () => {
-                  if (confirm("Revoke PIN for " + username + "?")) {
-                    db.collection("users").doc(userId).update({
-                      pin: null,
-                      "pendingDeposits": firebase.firestore.FieldValue.arrayRemove(req),
-                      history: firebase.firestore.FieldValue.arrayUnion({
-                        action: `PIN revoked`,
-                        date: new Date().toISOString()
-                      })
-                    }).then(() => {
-                      loadPinRequests();
-                      loadUsers();
-                    }).catch(error => {
-                      console.error("Error revoking PIN:", error);
-                      alert("Error revoking PIN");
-                      debugInfo.textContent += `[ERROR] Failed to revoke PIN: ${error.message}\n`;
-                    });
-                  }
-                };
-                div.appendChild(revokeBtn);
-              }
-              
-              if (req.status === "pending") pendingRequests.appendChild(div);
-              else completedRequests.appendChild(div);
             });
           });
         }).catch(error => {
@@ -1073,7 +1078,7 @@
         setInterval(fetchLiveExchangeRates, 5 * 60 * 1000);
       }
 
-      initApp();
+      // App initialization is now called from the password check function
     });
   </script>
 </body>
