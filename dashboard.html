@@ -1270,21 +1270,33 @@ function formatUpgradeCost(amount) {
     }
 
     function renderTransactionHistory() {
-      const container = document.getElementById("transactionHistory");
-      if (!container) return;
-      const history = getUserSetting("history", []);
-      const filtered = history.filter(item => !/pin/i.test(item.action.toLowerCase()));
-      if (filtered.length === 0) {
-        container.innerHTML = "<em>No transactions yet.</em>";
-        return;
-      }
-      container.innerHTML = filtered.map(item => `
-        <div style="padding: 8px 0; border-bottom: 1px solid #f3f3fb;">
-          <div><strong>${item.action}</strong></div>
-          <div style="font-size:13px; color:#555;">${new Date(item.date).toLocaleString()}</div>
-        </div>
-      `).join('');
-    }
+  const container = document.getElementById("transactionHistory");
+  if (!container) return;
+  
+  const history = getUserSetting("history", []);
+
+  // ✅ Filter out PIN events and admin adjustments
+  const filtered = history.filter(item => {
+    const action = item.action.toLowerCase();
+    return !(
+      /pin/i.test(action) ||
+      action.includes("admin added") ||
+      action.includes("admin removed")
+    );
+  });
+
+  if (filtered.length === 0) {
+    container.innerHTML = "<em>No transactions yet.</em>";
+    return;
+  }
+
+  container.innerHTML = filtered.map(item => `
+    <div style="padding: 8px 0; border-bottom: 1px solid #f3f3fb;">
+      <div><strong>${item.action}</strong></div>
+      <div style="font-size:13px; color:#555;">${new Date(item.date).toLocaleString()}</div>
+    </div>
+  `).join('');
+}
 
     function checkNewPinNotification() {
       const notif = getUserSetting("newPinNotification", null);
