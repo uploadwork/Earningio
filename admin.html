@@ -578,34 +578,27 @@
 
       // --- Get username from user data ---
       function getUsername(userData, userId) {
-        debugInfo.textContent += `[DEBUG] Getting username for user ${userId}\n`;
-        
-        if (userData && userData.email && typeof userData.email === 'string') {
-          debugInfo.textContent += `[DEBUG] Found email: ${userData.email}\n`;
+        // Prioritize email if it's a valid string.
+        if (userData && userData.email && typeof userData.email === 'string' && userData.email.trim().length > 0) {
           return userData.email;
         }
         
-        if (userData && userData.displayName && typeof userData.displayName === 'string') {
-          debugInfo.textContent += `[DEBUG] Found displayName: ${userData.displayName}\n`;
+        // Next, try displayName.
+        if (userData && userData.displayName && typeof userData.displayName === 'string' && userData.displayName.trim().length > 0) {
           return userData.displayName;
         }
-        
-        if (userData && userData.firstName && userData.lastName) {
-          debugInfo.textContent += `[DEBUG] Found firstName and lastName\n`;
-          return `${userData.firstName} ${userData.lastName}`;
+
+        // Then, try to construct a full name from firstName and lastName.
+        if (userData && (userData.firstName || userData.lastName)) {
+           const firstName = userData.firstName || '';
+           const lastName = userData.lastName || '';
+           const fullName = `${firstName} ${lastName}`.trim();
+           if (fullName.length > 0) {
+               return fullName;
+           }
         }
         
-        if (userData && userData.firstName && typeof userData.firstName === 'string') {
-          debugInfo.textContent += `[DEBUG] Found firstName: ${userData.firstName}\n`;
-          return userData.firstName;
-        }
-        
-        if (userData && userData.lastName && typeof userData.lastName === 'string') {
-          debugInfo.textContent += `[DEBUG] Found lastName: ${userData.lastName}\n`;
-          return userData.lastName;
-        }
-        
-        debugInfo.textContent += `[DEBUG] No username found, using document ID: ${userId}\n`;
+        // If all else fails, fall back to the user ID.
         return userId;
       }
 
